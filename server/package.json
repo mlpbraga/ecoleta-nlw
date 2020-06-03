@@ -4,11 +4,12 @@
   "description": "API REST desenvolvida para a next levl weeks",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev src/server.ts",
+    "dev": "ts-node-dev --transpileOnly --ignore-watch node_modules src/server.ts",
     "prod": "ts-node src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate": "knex migrate:latest --knexfile knexfile.ts migrate:latest",
-    "rollback": "knex migrate:rollback"
+    "db:migrate": "knex --knexfile knexfile.ts migrate:latest",
+    "db:rollback": "knex migrate:rollback",
+    "db:seed": "knex --knexfile knexfile.ts seed:run"
   },
   "keywords": [],
   "author": "",
