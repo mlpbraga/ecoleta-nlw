@@ -1,6 +1,6 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react';
 import { FiArrowLeft } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { LeafletMouseEvent } from 'leaflet';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 
@@ -41,6 +41,8 @@ const CreatePoint = () => {
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [initialPosition, setInitialPosition] = useState<[number, number]>([0 , 0]);
   const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0 , 0]);
+
+  const history = useHistory();
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(position => {
@@ -111,6 +113,26 @@ const CreatePoint = () => {
 
   }
 
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+
+    const [latitude, longitude] = selectedPosition;
+
+    const data = {
+      ...formData,
+      latitude,
+      longitude,
+      uf: selectedUf,
+      city: selectedCity,
+      items: selectedItems,
+    }
+
+    await api.post('points', data);
+
+    alert('Ponto de coleta criado');
+    history.push('/')
+  }
+
   return (
     <div id="page-create-point">
       <header>
@@ -120,7 +142,7 @@ const CreatePoint = () => {
           Voltar para home
         </Link>
       </header>
-      <form>
+      <form onSubmit={handleSubmit}>
         <h1>Cadastro do <br/>ponto de coleta</h1>
 
         <fieldset>
