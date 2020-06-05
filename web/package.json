@@ -24,7 +24,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "env:dev": "bash set_env.bash dev; touch src/App.tsx",
+    "env:dev-mac": "bash set_env.bash dev-macosx; touch src/App.tsx"
   },
   "eslintConfig": {
     "extends": "react-app"

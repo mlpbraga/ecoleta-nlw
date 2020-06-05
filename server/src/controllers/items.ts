@@ -1,13 +1,17 @@
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+
 import { Request, Response } from 'express';
 import knex from '../database/connection';
 
+const { API_URL } = process.env;
 class ItemsController {
   async index(req: Request, res: Response) {
     const items = await knex('items').select('*');
     const serializedItems = items.map(item => ({
       id: item.id,
       title: item.title,
-      imageUrl: `http://localhost:3377/uploads/${item.image}`,  //TODO: usar um .env
+      imageUrl: `${API_URL}/uploads/${item.image}`,  //TODO: usar um .env
     }));
     return res.json(serializedItems);
   }
