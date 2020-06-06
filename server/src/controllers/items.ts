@@ -1,4 +1,4 @@
-const path = require('path');
+import path from 'path';
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
 import { Request, Response } from 'express';
@@ -11,7 +11,7 @@ class ItemsController {
     const serializedItems = items.map(item => ({
       id: item.id,
       title: item.title,
-      imageUrl: `${API_URL}/uploads/${item.image}`,  //TODO: usar um .env
+      imageUrl: `${API_URL}/uploads/${item.image}`,
     }));
     return res.json(serializedItems);
   }
