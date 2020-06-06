@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Feather as Icon, FontAwesome } from '@expo/vector-icons';
 import {
   View,
@@ -9,17 +9,48 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+
+import api from '../../services/api';
+
+interface Param {
+  pointId: string;
+}
+interface Data {
+  point: {
+    image: string;
+    imageUrl: string;
+    name: string;
+    email: string;
+    whatsapp: string;
+    city: string;
+    uf: string;
+  };
+  items: {
+    title: string,
+  }[];
+}
 
 const Detail = () => {
+  const [data, setData] = useState<Data>({} as Data);
+  const route = useRoute();
+  const routeParams = route.params as Param;
   const navigation = useNavigation();
+
+  useEffect(() => {
+    api.get(`points/${routeParams.pointId}`).then(response => {
+      setData(response.data);
+    });
+  }, []);
 
   const handleNavigateBack = () => {
     navigation.goBack();
   }
 
-  const handleNavigateToPoints = () => {
+  const handleNavigateToPoints = () => {}
 
+  if (!data.point) {
+    return null;
   }
 
   return (
@@ -29,19 +60,17 @@ const Detail = () => {
           <Icon name='arrow-left' size={25} color='#34cb79' />
         </TouchableOpacity>
         <Image
-          source={{
-            uri: 'https://images.unsplash.com/photo-1503596476-1c12a8ba09a9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=50'
-          }}
+          source={{ uri: data.point.image }}
           style={styles.pointImage}
         />
-        <Text style={styles.pointName}> Mercado do Joca</Text>
-        <Text style={styles.pointItems}> Lampadas, A, B</Text>
+        <Text style={styles.pointName}> {data.point.name} </Text>
+        <Text style={styles.pointItems}> {
+          data.items.map(item => item.title).join(', ')
+        } </Text>
         <View style={styles.address}>
-          <Text style={styles.addressTitle}>
-            Titutlo
-          </Text>
+          <Text style={styles.addressTitle}> Endereço </Text>
           <Text style={styles.addressContent}>
-            Rio do sul, rc
+            { data.point.city }, { data.point.uf }
           </Text>
         </View>
       </View>
