@@ -8,6 +8,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
@@ -49,10 +50,14 @@ const Home = () => {
   }, [selectedUf]);
 
   const handleNavigateToPoints = () => {
-    navigation.navigate('Points', {
-      uf: selectedUf,
-      city: selectedCity,
-    });
+    if (selectedUf && selectedCity) {
+      navigation.navigate('Points', {
+        uf: selectedUf,
+        city: selectedCity,
+      });
+    } else {
+      Alert.alert('Ooooops...','Preencha o estado e a cidade onde deseja procurar o ponto de coleta.')
+    }
   }
 
   const handleSelectUf = (value: string) => {
