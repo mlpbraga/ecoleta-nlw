@@ -3,6 +3,8 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { Link, useHistory } from 'react-router-dom';
 import { LeafletMouseEvent } from 'leaflet';
 import { Map, TileLayer, Marker } from 'react-leaflet';
+import * as yup from 'yup';
+
 import Dropzone from '../../components/Dropzone';
 import api from '../../services/api';
 import ibge from '../../services/ibge-api';
@@ -121,24 +123,49 @@ const CreatePoint = () => {
     const city = selectedCity;
     const [ latitude, longitude ] = selectedPosition
     const items = selectedItems;
+    const inputs = {
+      name,
+      email,
+      whatsapp,
+      uf,
+      city,
+      latitude,
+      longitude,
+      items,
+    };
+    const schema = yup.object().shape({
+      name: yup.string().required(),
+      email: yup.string().email(),
+      whatsapp: yup.number().required(),
+      latitude: yup.number().required(),
+      longitude: yup.number().required(),
+      city: yup.string().required(),
+      uf: yup.string().required().max(2),
+      items: yup.array().min(1).required(),
+    });
+    const valid = await schema.isValid(inputs);
 
-    const data = new FormData();
-    data.append('name', name);
-    data.append('email', email);
-    data.append('whatsapp', whatsapp);
-    data.append('uf', uf);
-    data.append('city', city);
-    data.append('latitude', String(latitude));
-    data.append('longitude', String(longitude));
-    data.append('items', items.join(','));
-    if (selectedFile) {
+    if (valid && selectedFile) {
+      const data = new FormData();
+      data.append('name', name);
+      data.append('email', email);
+      data.append('whatsapp', whatsapp);
+      data.append('uf', uf);
+      data.append('city', city);
+      data.append('latitude', String(latitude));
+      data.append('longitude', String(longitude));
+      data.append('items', items.join(','));
       data.append('image', selectedFile);
+
+      await api.post('points', data);
+  
+      alert('Ponto de coleta criado');
+      history.push('/');
+    } else {
+      alert('Erro ao criar ponto de coleta, verifique se todos os campos foram inseridos.');
     }
 
-    await api.post('points', data);
 
-    alert('Ponto de coleta criado');
-    history.push('/')
   }
 
   return (
