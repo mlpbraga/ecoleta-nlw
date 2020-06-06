@@ -10,8 +10,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));
-
-app.use(routes);
+app.use('/points', routes.pointsRoute);
+app.use('/items', routes.itemsRoute);
 
 app.use(errors());
 
