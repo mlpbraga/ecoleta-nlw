@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Feather as Icon } from '@expo/vector-icons';
 import {
   View,
@@ -6,47 +6,125 @@ import {
   Image,
   Text,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import RNPickerSelect from 'react-native-picker-select';
+
+import ibge from '../../services/ibge-api';
+
+interface IBGEUFResponse {
+  id: number;
+  sigla: string;
+  nome: string;
+}
+interface IBGECityResponse {
+  id: number;
+  nome: string;
+}
 
 const Home = () => {
+  const [ufs, setUfs] = useState<string[]>([]);
+  const [citys, setCitys] = useState<string[]>([]);
+  const [selectedUf, setSelectedUf] = useState('0');
+  const [selectedCity, setSelectedCity] = useState('0');
+
   const navigation = useNavigation();
 
+  useEffect(() => {
+    ibge.get<IBGEUFResponse[]>('').then(response => {
+      const initials = response.data.map(item => item.sigla);
+      setUfs(initials);
+    });
+  }, []);
+
+  useEffect(() => {
+    if ( selectedUf === '0') return;
+    ibge.get<IBGECityResponse[]>(`${selectedUf}/municipios`).then(response => {
+      const citys = response.data.map(item => item.nome);
+      setCitys(citys);
+    });
+  }, [selectedUf]);
+
   const handleNavigateToPoints = () => {
-    navigation.navigate('Points');
+    navigation.navigate('Points', {
+      uf: selectedUf,
+      city: selectedCity,
+    });
   }
 
-  return (
-    <ImageBackground
-      source={require('../../assets/home-background.png')}
-      style={styles.container}
-      imageStyle={{ width: 274, height: 368 }}
-    >
-      <View style={styles.main}>
-        <Image source={require('../../assets/logo.png')}/>
-        <Text style={styles.title}>
-          Seu marketplace de coleta de resíduos
-        </Text>
-        <Text style={styles.description}>
-          Ajudamos pessoas a encontrarem pontos de coleta de forma eficiente
-        </Text>
-      </View>
+  const handleSelectUf = (event: ChangeEvent<HTMLSelectElement>) => {
+    const uf = event.target.value;
+    setSelectedUf(uf);
+  }
 
-      <View style={styles.footer}>
-        <RectButton
-          style={styles.button}
-          onPress={ handleNavigateToPoints }
-        >
-          <View style={styles.buttonIcon}>
-            <Icon name='arrow-right' color='#fff' size={24}/>
+  const handleSelectedCity = (event: ChangeEvent<HTMLSelectElement>) => {
+    const city = event.target.value;
+    setSelectedCity(city);
+  }
+
+
+  return (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={ Platform.OS === 'ios' ? 'padding' : undefined }
+    >
+      <ImageBackground
+        source={require('../../assets/home-background.png')}
+        style={styles.container}
+        imageStyle={{ width: 274, height: 368 }}
+      >
+        <View style={styles.main}>
+          <Image source={require('../../assets/logo.png')}/>
+          <View>
+            <Text style={styles.title}>
+              Seu marketplace de coleta de resíduos
+            </Text>
+            <Text style={styles.description}>
+              Ajudamos pessoas a encontrarem pontos de coleta de forma eficiente
+            </Text>
           </View>
-          <Text style={styles.buttonText}>
-            Entrar
-          </Text>
-        </RectButton>
-      </View>
-    </ImageBackground>
+        </View>
+
+        <View style={styles.footer}>
+          <View style={styles.input}>
+            <RNPickerSelect
+              doneText={'Selecionar'}
+              placeholder={{}}
+              items={ufs.map(item => ({
+                label: item,
+                value: item,
+              }))}
+              onValueChange={handleSelectUf}
+            />
+          </View>
+          <View style={styles.input}>
+            <RNPickerSelect
+              doneText={'Selecionar'}
+              placeholder={{}}
+              items={citys.map(item => ({
+                label: item,
+                value: item,
+              }))}
+              onValueChange={handleSelectedCity}
+              />
+          </View>
+          <RectButton
+            style={styles.button}
+            onPress={ handleNavigateToPoints }
+          >
+            <View style={styles.buttonIcon}>
+              <Icon name='arrow-right' color='#fff' size={24}/>
+            </View>
+            <Text style={styles.buttonText}>
+              Entrar
+            </Text>
+          </RectButton>
+        </View>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   )
 }
 
