@@ -7,9 +7,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  Linking,
 } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import * as MailComposer from 'expo-mail-composer';
 
 import api from '../../services/api';
 
@@ -49,6 +51,17 @@ const Detail = () => {
 
   const handleNavigateToPoints = () => {}
 
+  const handleComposeMail = () => {
+    MailComposer.composeAsync({
+      subject: 'Interesse na coleta de resíduos',
+      recipients: [data.point.email]
+    });
+  }
+
+  const handleWhatsapp = () => {
+    Linking.openURL(`whatsapp://send?phone=${data.point.whatsapp}&text=Tenho interesse sobre coleta de resíduos`);
+  }
+
   if (!data.point) {
     return null;
   }
@@ -75,27 +88,13 @@ const Detail = () => {
         </View>
       </View>
       <View style={styles.footer}>
-        <RectButton
-          style={styles.button}
-          onPress={ handleNavigateToPoints }
-        >
-          <View style={styles.buttonIcon}>
-            <FontAwesome name='whatsapp' color='#fff' size={20}/>
-          </View>
-          <Text style={styles.buttonText}>
-            Whatsapp
-          </Text>
+        <RectButton style={styles.button} onPress={handleWhatsapp}>
+          <FontAwesome name="whatsapp" size={20} color="#fff" />
+          <Text style={styles.buttonText}>Whatsapp</Text>
         </RectButton>
-        <RectButton
-          style={styles.button}
-          onPress={ handleNavigateToPoints }
-        >
-          <View style={styles.buttonIcon}>
-            <Icon name='mail' color='#fff' size={20}/>
-          </View>
-          <Text style={styles.buttonText}>
-            E-mail
-          </Text>
+        <RectButton style={styles.button} onPress={handleComposeMail}>
+          <Icon name="mail" size={20} color="#fff" />
+          <Text style={styles.buttonText}>E-mail</Text>
         </RectButton>
       </View>
     </ SafeAreaView>
@@ -154,7 +153,6 @@ const styles = StyleSheet.create({
     borderColor: '#999',
     paddingVertical: 20,
     paddingHorizontal: 32,
-    paddingBottom: 0,
     flexDirection: 'row',
     justifyContent: 'space-between'
   },

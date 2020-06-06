@@ -58,6 +58,7 @@ class PointsController {
     });
   }
   async index( req: Request, res: Response) {
+    console.log(req.url);
     const {
       city,
       uf,
@@ -74,7 +75,7 @@ class PointsController {
       .where('uf', String(uf))
       .distinct()
       .select('points.*');
-
+    console.log(points)
     return res.json(points);
   }
 };
