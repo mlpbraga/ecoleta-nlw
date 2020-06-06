@@ -55,13 +55,13 @@ const Home = () => {
     });
   }
 
-  const handleSelectUf = (event: ChangeEvent<HTMLSelectElement>) => {
-    const uf = event.target.value;
+  const handleSelectUf = (value: string) => {
+    const uf = value;
     setSelectedUf(uf);
   }
 
-  const handleSelectedCity = (event: ChangeEvent<HTMLSelectElement>) => {
-    const city = event.target.value;
+  const handleSelectedCity = (value: string) => {
+    const city = value;
     setSelectedCity(city);
   }
 
@@ -89,28 +89,40 @@ const Home = () => {
         </View>
 
         <View style={styles.footer}>
-          <View style={styles.input}>
+          {/* <View style={styles.input}> */}
             <RNPickerSelect
               doneText={'Selecionar'}
-              placeholder={{}}
+              placeholder={{
+                label: 'Selecione um estado...',
+                value: null,
+                color: '#9EA0A4',
+              }}
+              value={selectedUf}
+              style={pickerSelectStyles}
               items={ufs.map(item => ({
                 label: item,
                 value: item,
               }))}
-              onValueChange={handleSelectUf}
+              onValueChange={value => handleSelectUf(value)}
             />
-          </View>
-          <View style={styles.input}>
+          {/* </View> */}
+          {/* <View style={styles.input}> */}
             <RNPickerSelect
               doneText={'Selecionar'}
-              placeholder={{}}
+              placeholder={{
+                label: 'Selecione uma cidade...',
+                value: null,
+                color: '#9EA0A4',
+              }}
+              value={selectedCity}
+              style={pickerSelectStyles}
               items={citys.map(item => ({
                 label: item,
                 value: item,
               }))}
-              onValueChange={handleSelectedCity}
+              onValueChange={value => handleSelectedCity(value)}
               />
-          </View>
+          {/* </View> */}
           <RectButton
             style={styles.button}
             onPress={ handleNavigateToPoints }
@@ -194,7 +206,36 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontFamily: 'Roboto_500Medium',
     fontSize: 16,
-  }
+  },
+});
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: 'gray',
+    color: 'black',
+    height: 60,
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    marginBottom: 8,
+    paddingHorizontal: 24,
+    fontSize: 16,
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+  inputAndroid: {
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'purple',
+    borderRadius: 8,
+    color: 'black',
+    height: 60,
+    backgroundColor: '#FFF',
+    marginBottom: 8,
+    paddingHorizontal: 24,
+    fontSize: 16,
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
 });
 
 export default Home;
