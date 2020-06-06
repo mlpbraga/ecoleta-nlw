@@ -49,15 +49,12 @@ const Points = () => {
               }}
             >
               <View style={styles.mapMarkerContainer}>
-                <Image
-                  source={{
-                    uri: 'https://images.unsplash.com/photo-1503596476-1c12a8ba09a9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=50'
-                  }}
-                  styles={styles.mapMarkerImage}
-                />
+                <Image style={styles.mapMarkerImage} source={{ uri: 'https://images.unsplash.com/photo-1503596476-1c12a8ba09a9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=50'}}/>
                 <Text style={styles.mapMarkerTitle}> Mercado </Text>
               </View>
             </Marker>
+              
+            {/* </Marker> */}
           </MapView>
         </View>
       </View>
@@ -71,8 +68,9 @@ const Points = () => {
         >
           {[1,2,3,4,5,6].map((i) => (
             <TouchableOpacity
-            style={styles.item}
-            onPress={ () => {} }
+              key={i}
+              style={styles.item}
+              onPress={ () => {} }
             >
               <SvgUri width={42} height={42} uri='http://192.168.15.6:3377/uploads/lampadas.svg'/>
               <Text style={styles.iconTitle}>{i}</Text>

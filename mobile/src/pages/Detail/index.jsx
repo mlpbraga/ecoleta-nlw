@@ -1,15 +1,43 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import Constants from 'expo-constants';
+import { Feather as Icon } from '@expo/vector-icons';
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
+import { RectButton } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
 const Detail = () => {
-  return <View />
+  const navigation = useNavigation();
+
+  const handleNavigateBack = () => {
+    navigation.goBack();
+  }
+
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity onPress={handleNavigateBack}>
+        <Icon name='arrow-left' size={25} color='#34cb79' />
+      </TouchableOpacity>
+      <Image
+        source={{
+          uri: 'https://images.unsplash.com/photo-1503596476-1c12a8ba09a9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=50'
+        }}
+        style={styles.pointImage}
+      />
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 32,
-    paddingTop: 20,
+    paddingTop: 20 + Constants.statusBarHeight,
   },
 
   pointImage: {
