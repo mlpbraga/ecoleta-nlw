@@ -3,7 +3,7 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { Link, useHistory } from 'react-router-dom';
 import { LeafletMouseEvent } from 'leaflet';
 import { Map, TileLayer, Marker } from 'react-leaflet';
-
+import Dropzone from '../../components/Dropzone';
 import api from '../../services/api';
 import ibge from '../../services/ibge-api';
 
@@ -144,7 +144,7 @@ const CreatePoint = () => {
       </header>
       <form onSubmit={handleSubmit}>
         <h1>Cadastro do <br/>ponto de coleta</h1>
-
+        <Dropzone/>
         <fieldset>
           <legend>
             <h2>Dados</h2>
