@@ -73,7 +73,7 @@ const Detail = () => {
           <Icon name='arrow-left' size={25} color='#34cb79' />
         </TouchableOpacity>
         <Image
-          source={{ uri: data.point.image }}
+          source={{ uri: data.point.imageUrl }}
           style={styles.pointImage}
         />
         <Text style={styles.pointName}> {data.point.name} </Text>
