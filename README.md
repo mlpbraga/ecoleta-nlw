@@ -1,4 +1,4 @@
-# next-level-week
+# Ecoleta
 App desenvolvido durante a participação na Next Level Week do Rocket Seat.
 
 ### Organização
